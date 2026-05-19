@@ -1,0 +1,43 @@
+{
+  "build_command": "pnpm run build",
+  "capabilities": [
+    "server",
+    "db",
+    "user"
+  ],
+  "dev_command": "pnpm run dev",
+  "env_vars": {
+    "DATABASE_URL": "mysql://2WVGL54xZy9GCEL.root:eg00am7FBe7qFqf3Z4lg@gateway06.us-east-1.prod.aws.tidbcloud.com:4000/Wz8MVzUKSE5Js4yiZfrhPT?ssl={\"rejectUnauthorized\":true}"
+  },
+  "experiments": [
+    "no_db_push"
+  ],
+  "git_remote": {
+    "repo_url": "s3://vida-prod-gitrepo/webdev-git/310519663140173001/Wz8MVzUKSE5Js4yiZfrhPT",
+    "access_key_id": "ASIAZV3A2ECZMNDJDCCM",
+    "secret_access_key": "GmSwEQb3UNGCtKx+hwB075z+BSO5IMFb/8eARE/e",
+    "session_token": "IQoJb3JpZ2luX2VjEBQaCXVzLWVhc3QtMSJHMEUCIFoFlPFmNUOKXY0yu/zsdrkNBsXCjJZlViDcjrQYV6NfAiEAq8V9ML+9lv3xuYWN8gKweI3CviiJ8vUnkcz9BhbUEC4q/wMI3P//////////ARAEGgw2NjUzODYwOTg4NjYiDFoGaStLC5fo6bQrISrTA6SE5b50fIddJ87qCwGZpV5vPw/MYpwdnyb2AmHfKloHjbk0p8+6CbcjPevUhyzWcFfAxOtn1YIBhWl153wHnJ3IRS/7YdrsMERbqXrjL1AS1rv+gThSLRxvGkBt2D3FzwGbgeuMj6iieoh5uvMHkikfaOmcuzRlW2OcdfPXM7Q1jx5XO4cKkeVKvlbX8IznIKY4KpuOH7xWcCKNpmUtmB2dOlaOH5pzGvoBqxJZSlaM4K3vMhq/m5tMPUY8ScBu1laBdh2aJsg1gMbeNlOKNti3eukgjaT1v3S2Odfwp5FXMXJHzlvDei5Ij9MYJDxysLP0oHE1BRUjnLLlFXZH+jft/sbjzhQ0+/tmsFeyhVk7joRnVzoox5Clr0Sf2Veit+4L/R/nsqWVMQAAr8r46TR7T++iy9EylT8MruZO3Uv4PURVdpPazbwRaSaEwsTcizfE7Kodd/o86issD9848s1CW40WhBQ0ww9hfFi5GyNZXnCspxSoThbL+xojbkrQ6aloWj+UEkLTMU54byoG+N2rDMXe7ckApYzMtujPQQ4sqBBOr34F67VolvbHtzwrZaNABC31tKaAP6GmedvYreYrlpOkESMI3bXUgsnlgz7mfy+1MOfrstAGOp0BOlVXzQOor3fEHI5lxuBHZQM1e+HgAa01VxFHlpdZaQBNYi/NWGiWsjxLx3QzzE4QEAYmZXqt6qfZxevuyI9aRcxIGWmCm2W0kiG5u0iAVcJnlGb6DDlQFt8ILohelOMACqEmsz9OJT1jT9/6mcOMO4X6aqj69Omgi57oXlPX6K/wZEgsPYTMqJBIg9gknS6Hb1RLCSN+/FLZj1JnoQ==",
+    "expiration": "2026-05-20T07:11:35.000Z"
+  },
+  "name": "clinica-da-alma",
+  "path": "/home/ubuntu/clinica-da-alma",
+  "port": 3000,
+  "secrets": {
+    "BUILT_IN_FORGE_API_KEY": "NmSxYzokEUTYHQeEdLDtGd",
+    "BUILT_IN_FORGE_API_URL": "https://forge.manus.ai",
+    "JWT_SECRET": "e3rrMhs5KKnjMDAuRZBAwf",
+    "OAUTH_SERVER_URL": "https://api.manus.im",
+    "OWNER_NAME": "Francieli Minussi",
+    "OWNER_OPEN_ID": "fgzbq2wDjVaHqBdMbqyhnT",
+    "VITE_ANALYTICS_ENDPOINT": "https://manus-analytics.com",
+    "VITE_ANALYTICS_WEBSITE_ID": "dcd2d4f8-53c0-409e-9b34-fb6530717f1e",
+    "VITE_APP_ID": "Wz8MVzUKSE5Js4yiZfrhPT",
+    "VITE_APP_LOGO": "",
+    "VITE_APP_TITLE": "Clínica da Alma",
+    "VITE_FRONTEND_FORGE_API_KEY": "GLKHGmW44gBJfopZLMt9H5",
+    "VITE_FRONTEND_FORGE_API_URL": "https://forge.manus.ai",
+    "VITE_OAUTH_PORTAL_URL": "https://manus.im"
+  },
+  "template_id": "web-db-user",
+  "test_command": "pnpm test"
+}
