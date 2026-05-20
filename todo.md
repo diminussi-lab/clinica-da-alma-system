@@ -88,3 +88,22 @@
 - [x] Implementar gráfico de faturamento mensal (coluna)
 - [x] Integrar calendário visual para agendamentos
 - [x] Adicionar filtros e análises de progresso
+
+
+## Fase 16: FullCalendar com Drag-and-Drop
+- [x] Instalar e configurar FullCalendar
+- [x] Implementar drag-and-drop de sessões
+- [x] Adicionar cores por tipo de sessão
+- [x] Sincronizar com banco de dados em tempo real
+
+## Fase 17: Notificações Reais com SendGrid/Twilio
+- [x] Configurar SendGrid para emails
+- [x] Configurar Twilio para SMS
+- [x] Implementar lembretes automáticos
+- [x] Adicionar notificações de evolução emocional
+
+## Fase 18: Geração de PDFs com jsPDF
+- [x] Instalar jsPDF e html2pdf
+- [x] Criar templates de relatório
+- [x] Adicionar gráficos aos PDFs
+- [x] Implementar download de relatórios

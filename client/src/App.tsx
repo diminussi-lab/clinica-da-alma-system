@@ -12,6 +12,9 @@ import Analytics from "./pages/Analytics";
 import Calendar from "./pages/Calendar";
 import Notifications from "./pages/Notifications";
 import Reports from "./pages/Reports";
+import FullCalendarPage from "./pages/FullCalendarPage";
+import NotificationsAdvanced from "./pages/NotificationsAdvanced";
+import PDFReports from "./pages/PDFReports";
 
 function Router() {
   const { isAuthenticated, loading } = useAuth();
@@ -34,6 +37,9 @@ function Router() {
       <Route path={"/calendar"} component={Calendar} />
       <Route path={"/notifications"} component={Notifications} />
       <Route path={"/reports"} component={Reports} />
+      <Route path={"/fullcalendar"} component={FullCalendarPage} />
+      <Route path={"/notifications-advanced"} component={NotificationsAdvanced} />
+      <Route path={"/pdf-reports"} component={PDFReports} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
