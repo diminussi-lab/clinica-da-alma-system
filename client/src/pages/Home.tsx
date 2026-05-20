@@ -24,7 +24,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-spiritual">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-12 h-12 animate-spin spiritual-accent" />
-          <p className="text-muted-foreground">Carregando...</p>
+          <p className="text-slate-600">Carregando...</p>
         </div>
       </div>
     );
@@ -41,13 +41,13 @@ export default function Home() {
         <div className="container py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] flex items-center justify-center">
-              <Heart className="w-6 h-6 text-foreground" />
+              <Heart className="w-6 h-6 text-slate-900" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Clínica da Alma</h1>
+            <h1 className="text-2xl font-bold text-slate-900">Clínica da Alma</h1>
           </div>
           <Button
             onClick={() => (window.location.href = getLoginUrl())}
-            className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-foreground hover:shadow-spiritual"
+            className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
           >
             Entrar
           </Button>
@@ -58,24 +58,24 @@ export default function Home() {
       <section className="container py-20">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6 animate-slide-in-left">
-            <h2 className="text-5xl font-bold text-foreground leading-tight">
+            <h2 className="text-5xl font-bold text-slate-900 leading-tight">
               Transforme sua prática terapêutica
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-slate-600">
               Clínica da Alma é um sistema completo para terapeutas que desejam oferecer um acompanhamento profundo e personalizado aos seus clientes. Organize prontuários, sessões, evolução emocional e muito mais em um único lugar elegante e intuitivo.
             </p>
             <div className="flex gap-4">
               <Button
                 onClick={() => (window.location.href = getLoginUrl())}
                 size="lg"
-                className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-foreground hover:shadow-spiritual"
+                className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
               >
                 Começar Agora
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-[hsl(var(--spiritual-lilac))] text-foreground hover:bg-[hsl(var(--spiritual-lilac)_/_0.1)]"
+                className="border-[hsl(var(--spiritual-lilac))] text-slate-900 hover:bg-[hsl(var(--spiritual-lilac)_/_0.1)]"
               >
                 Saiba Mais
               </Button>
@@ -85,19 +85,19 @@ export default function Home() {
           <div className="animate-slide-in-right">
             <div className="bg-gradient-to-br from-[hsl(var(--spiritual-gold)_/_0.1)] to-[hsl(var(--spiritual-lilac)_/_0.1)] rounded-2xl p-8 border border-spiritual">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-card rounded-lg p-4 shadow-spiritual-sm border border-border">
+                <div className="bg-slate-50 rounded-lg p-4 shadow-spiritual-sm border border-slate-200">
                   <Users className="w-8 h-8 spiritual-accent mb-2" />
                   <p className="text-sm font-semibold">Gestão de Clientes</p>
                 </div>
-                <div className="bg-card rounded-lg p-4 shadow-spiritual-sm border border-border">
+                <div className="bg-slate-50 rounded-lg p-4 shadow-spiritual-sm border border-slate-200">
                   <FileText className="w-8 h-8 spiritual-accent mb-2" />
                   <p className="text-sm font-semibold">Prontuários</p>
                 </div>
-                <div className="bg-card rounded-lg p-4 shadow-spiritual-sm border border-border">
+                <div className="bg-slate-50 rounded-lg p-4 shadow-spiritual-sm border border-slate-200">
                   <Calendar className="w-8 h-8 spiritual-accent mb-2" />
                   <p className="text-sm font-semibold">Agenda</p>
                 </div>
-                <div className="bg-card rounded-lg p-4 shadow-spiritual-sm border border-border">
+                <div className="bg-slate-50 rounded-lg p-4 shadow-spiritual-sm border border-slate-200">
                   <Music className="w-8 h-8 spiritual-accent mb-2" />
                   <p className="text-sm font-semibold">Meditações</p>
                 </div>
@@ -109,7 +109,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="container py-20">
-        <h3 className="text-4xl font-bold text-center mb-16 text-foreground">
+        <h3 className="text-4xl font-bold text-center mb-16 text-slate-900">
           Recursos Principais
         </h3>
 
@@ -152,8 +152,8 @@ export default function Home() {
             >
               <div className="flex flex-col h-full">
                 <feature.icon className="w-12 h-12 spiritual-accent mb-4 group-hover:scale-110 transition-smooth" />
-                <h4 className="text-xl font-semibold mb-2 text-foreground">{feature.title}</h4>
-                <p className="text-muted-foreground flex-grow">{feature.description}</p>
+                <h4 className="text-xl font-semibold mb-2 text-slate-900">{feature.title}</h4>
+                <p className="text-slate-600 flex-grow">{feature.description}</p>
               </div>
             </Card>
           ))}
@@ -163,16 +163,16 @@ export default function Home() {
       {/* CTA Section */}
       <section className="container py-20">
         <div className="bg-gradient-to-r from-[hsl(var(--spiritual-gold)_/_0.1)] to-[hsl(var(--spiritual-lilac)_/_0.1)] rounded-2xl p-12 border border-spiritual text-center">
-          <h3 className="text-3xl font-bold mb-4 text-foreground">
+          <h3 className="text-3xl font-bold mb-4 text-slate-900">
             Pronto para transformar sua prática?
           </h3>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
             Comece a usar Clínica da Alma hoje mesmo e ofereça um acompanhamento terapêutico mais profundo e organizado aos seus clientes.
           </p>
           <Button
             onClick={() => (window.location.href = getLoginUrl())}
             size="lg"
-            className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-foreground hover:shadow-spiritual"
+            className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
           >
             Acessar Agora
           </Button>
@@ -181,7 +181,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-spiritual mt-20">
-        <div className="container py-8 text-center text-muted-foreground">
+        <div className="container py-8 text-center text-slate-600">
           <p>© 2026 Clínica da Alma. Todos os direitos reservados.</p>
         </div>
       </footer>

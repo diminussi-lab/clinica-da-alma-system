@@ -50,8 +50,8 @@ export default function Dashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground">Bem-vindo, {user.name}!</h1>
-            <p className="text-muted-foreground mt-2">Gerencie sua prática terapêutica com elegância</p>
+            <h1 className="text-4xl font-bold text-slate-900">Bem-vindo, {user.name}!</h1>
+            <p className="text-slate-600 mt-2">Gerencie sua prática terapêutica com elegância</p>
           </div>
         </div>
 
@@ -60,8 +60,8 @@ export default function Dashboard() {
           <Card className="card-spiritual">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Total de Clientes</p>
-                <p className="text-3xl font-bold text-foreground">{clients.length}</p>
+                <p className="text-sm text-slate-600 mb-2">Total de Clientes</p>
+                <p className="text-3xl font-bold text-slate-900">{clients.length}</p>
               </div>
               <Users className="w-8 h-8 spiritual-accent" />
             </div>
@@ -70,8 +70,8 @@ export default function Dashboard() {
           <Card className="card-spiritual">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Próximas Sessões</p>
-                <p className="text-3xl font-bold text-foreground">{upcomingAppointments.length}</p>
+                <p className="text-sm text-slate-600 mb-2">Próximas Sessões</p>
+                <p className="text-3xl font-bold text-slate-900">{upcomingAppointments.length}</p>
               </div>
               <Calendar className="w-8 h-8 spiritual-accent" />
             </div>
@@ -80,8 +80,8 @@ export default function Dashboard() {
           <Card className="card-spiritual">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Receita Total</p>
-                <p className="text-3xl font-bold text-foreground">R$ {totalIncome.toFixed(2)}</p>
+                <p className="text-sm text-slate-600 mb-2">Receita Total</p>
+                <p className="text-3xl font-bold text-slate-900">R$ {totalIncome.toFixed(2)}</p>
               </div>
               <DollarSign className="w-8 h-8 spiritual-accent" />
             </div>
@@ -90,7 +90,7 @@ export default function Dashboard() {
           <Card className="card-spiritual">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Saldo</p>
+                <p className="text-sm text-slate-600 mb-2">Saldo</p>
                 <p className="text-3xl font-bold spiritual-accent">R$ {(totalIncome - totalExpense).toFixed(2)}</p>
               </div>
               <TrendingUp className="w-8 h-8 spiritual-accent" />
@@ -100,7 +100,7 @@ export default function Dashboard() {
 
         {/* Tabs Section */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-card border border-border">
+          <TabsList className="bg-slate-50 border border-slate-200">
             <TabsTrigger value="overview">Visão Geral</TabsTrigger>
             <TabsTrigger value="clients">Clientes</TabsTrigger>
             <TabsTrigger value="appointments">Agenda</TabsTrigger>
@@ -112,16 +112,16 @@ export default function Dashboard() {
             <div className="grid md:grid-cols-2 gap-6">
               {/* Próximas Sessões */}
               <Card className="card-spiritual">
-                <h3 className="text-xl font-semibold mb-4 text-foreground flex items-center gap-2">
+                <h3 className="text-xl font-semibold mb-4 text-slate-900 flex items-center gap-2">
                   <Calendar className="w-5 h-5 spiritual-accent" />
                   Próximas Sessões
                 </h3>
                 <div className="space-y-3">
                   {upcomingAppointments.length > 0 ? (
                     upcomingAppointments.map(apt => (
-                      <div key={apt.id} className="p-3 bg-background rounded-lg border border-border">
-                        <p className="font-semibold text-foreground">Sessão #{apt.id}</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div key={apt.id} className="p-3 bg-white rounded-lg border border-slate-200">
+                        <p className="font-semibold text-slate-900">Sessão #{apt.id}</p>
+                        <p className="text-sm text-slate-600">
                           {new Date(apt.appointmentDate).toLocaleDateString("pt-BR", {
                             weekday: "short",
                             day: "2-digit",
@@ -133,28 +133,28 @@ export default function Dashboard() {
                       </div>
                     ))
                   ) : (
-                    <p className="text-muted-foreground">Nenhuma sessão agendada</p>
+                    <p className="text-slate-600">Nenhuma sessão agendada</p>
                   )}
                 </div>
               </Card>
 
               {/* Resumo Financeiro */}
               <Card className="card-spiritual">
-                <h3 className="text-xl font-semibold mb-4 text-foreground flex items-center gap-2">
+                <h3 className="text-xl font-semibold mb-4 text-slate-900 flex items-center gap-2">
                   <DollarSign className="w-5 h-5 spiritual-accent" />
                   Resumo Financeiro
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-background rounded-lg border border-border">
-                    <span className="text-muted-foreground">Receita Total</span>
-                    <span className="font-semibold text-foreground">R$ {totalIncome.toFixed(2)}</span>
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-200">
+                    <span className="text-slate-600">Receita Total</span>
+                    <span className="font-semibold text-slate-900">R$ {totalIncome.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-background rounded-lg border border-border">
-                    <span className="text-muted-foreground">Despesas</span>
-                    <span className="font-semibold text-foreground">R$ {totalExpense.toFixed(2)}</span>
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg border border-slate-200">
+                    <span className="text-slate-600">Despesas</span>
+                    <span className="font-semibold text-slate-900">R$ {totalExpense.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-gradient-to-r from-[hsl(var(--spiritual-gold)_/_0.1)] to-[hsl(var(--spiritual-lilac)_/_0.1)] rounded-lg border border-spiritual">
-                    <span className="font-semibold text-foreground">Saldo</span>
+                    <span className="font-semibold text-slate-900">Saldo</span>
                     <span className="font-bold spiritual-accent">R$ {(totalIncome - totalExpense).toFixed(2)}</span>
                   </div>
                 </div>
@@ -165,10 +165,10 @@ export default function Dashboard() {
           {/* Clients Tab */}
           <TabsContent value="clients" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-foreground">Meus Clientes</h3>
+              <h3 className="text-xl font-semibold text-slate-900">Meus Clientes</h3>
               <Button
                 onClick={() => navigate("/clients/new")}
-                className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-foreground hover:shadow-spiritual"
+                className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Cliente
@@ -182,10 +182,10 @@ export default function Dashboard() {
                     className="card-spiritual cursor-pointer hover:shadow-spiritual transition-smooth"
                     onClick={() => navigate(`/clients/${client.id}`)}
                   >
-                    <h4 className="text-lg font-semibold text-foreground mb-2">{client.name}</h4>
-                    <p className="text-sm text-muted-foreground mb-3">{client.email || "Sem email"}</p>
+                    <h4 className="text-lg font-semibold text-slate-900 mb-2">{client.name}</h4>
+                    <p className="text-sm text-slate-600 mb-3">{client.email || "Sem email"}</p>
                     <div className="flex justify-between items-center">
-                      <span className={`text-xs px-2 py-1 rounded-full ${client.isActive ? "bg-[hsl(var(--spiritual-gold)_/_0.1)] text-foreground" : "bg-muted text-muted-foreground"}`}>
+                      <span className={`text-xs px-2 py-1 rounded-full ${client.isActive ? "bg-[hsl(var(--spiritual-gold)_/_0.1)] text-slate-900" : "bg-slate-100 text-slate-600"}`}>
                         {client.isActive ? "Ativo" : "Inativo"}
                       </span>
                       <Button variant="ghost" size="sm">
@@ -196,8 +196,8 @@ export default function Dashboard() {
                 ))
               ) : (
                 <div className="col-span-2 text-center py-12">
-                  <Users className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">Nenhum cliente cadastrado</p>
+                  <Users className="w-12 h-12 mx-auto mb-4 text-slate-600" />
+                  <p className="text-slate-600">Nenhum cliente cadastrado</p>
                 </div>
               )}
             </div>
@@ -206,10 +206,10 @@ export default function Dashboard() {
           {/* Appointments Tab */}
           <TabsContent value="appointments" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-foreground">Agenda</h3>
+              <h3 className="text-xl font-semibold text-slate-900">Agenda</h3>
               <Button
                 onClick={() => navigate("/appointments/new")}
-                className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-foreground hover:shadow-spiritual"
+                className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Agendamento
@@ -219,11 +219,11 @@ export default function Dashboard() {
               {appointments.length > 0 ? (
                 <div className="space-y-3">
                   {appointments.slice(0, 10).map(apt => (
-                    <div key={apt.id} className="p-4 bg-background rounded-lg border border-border hover:border-spiritual transition-smooth">
+                    <div key={apt.id} className="p-4 bg-white rounded-lg border border-slate-200 hover:border-spiritual transition-smooth">
                       <div className="flex justify-between items-start">
                         <div>
-                          <p className="font-semibold text-foreground">Sessão #{apt.id}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="font-semibold text-slate-900">Sessão #{apt.id}</p>
+                          <p className="text-sm text-slate-600">
                             {new Date(apt.appointmentDate).toLocaleDateString("pt-BR", {
                               weekday: "long",
                               day: "2-digit",
@@ -233,7 +233,7 @@ export default function Dashboard() {
                             })}
                           </p>
                         </div>
-                        <span className={`text-xs px-2 py-1 rounded-full ${apt.status === "scheduled" ? "bg-[hsl(var(--spiritual-lilac)_/_0.1)] text-foreground" : "bg-muted text-muted-foreground"}`}>
+                        <span className={`text-xs px-2 py-1 rounded-full ${apt.status === "scheduled" ? "bg-[hsl(var(--spiritual-lilac)_/_0.1)] text-slate-900" : "bg-slate-100 text-slate-600"}`}>
                           {apt.status}
                         </span>
                       </div>
@@ -242,8 +242,8 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <Calendar className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">Nenhum agendamento</p>
+                  <Calendar className="w-12 h-12 mx-auto mb-4 text-slate-600" />
+                  <p className="text-slate-600">Nenhum agendamento</p>
                 </div>
               )}
             </Card>
@@ -252,10 +252,10 @@ export default function Dashboard() {
           {/* Financial Tab */}
           <TabsContent value="financial" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-foreground">Financeiro</h3>
+              <h3 className="text-xl font-semibold text-slate-900">Financeiro</h3>
               <Button
                 onClick={() => navigate("/financial/new")}
-                className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-foreground hover:shadow-spiritual"
+                className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Registro
@@ -264,16 +264,16 @@ export default function Dashboard() {
             <Card className="card-spiritual">
               <div className="space-y-3">
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div className="p-4 bg-background rounded-lg border border-border">
-                    <p className="text-sm text-muted-foreground mb-2">Receita Total</p>
+                  <div className="p-4 bg-white rounded-lg border border-slate-200">
+                    <p className="text-sm text-slate-600 mb-2">Receita Total</p>
                     <p className="text-2xl font-bold spiritual-accent">R$ {totalIncome.toFixed(2)}</p>
                   </div>
-                  <div className="p-4 bg-background rounded-lg border border-border">
-                    <p className="text-sm text-muted-foreground mb-2">Despesas</p>
-                    <p className="text-2xl font-bold text-foreground">R$ {totalExpense.toFixed(2)}</p>
+                  <div className="p-4 bg-white rounded-lg border border-slate-200">
+                    <p className="text-sm text-slate-600 mb-2">Despesas</p>
+                    <p className="text-2xl font-bold text-slate-900">R$ {totalExpense.toFixed(2)}</p>
                   </div>
                   <div className="p-4 bg-gradient-to-r from-[hsl(var(--spiritual-gold)_/_0.1)] to-[hsl(var(--spiritual-lilac)_/_0.1)] rounded-lg border border-spiritual">
-                    <p className="text-sm text-muted-foreground mb-2">Saldo</p>
+                    <p className="text-sm text-slate-600 mb-2">Saldo</p>
                     <p className="text-2xl font-bold spiritual-accent">R$ {(totalIncome - totalExpense).toFixed(2)}</p>
                   </div>
                 </div>
