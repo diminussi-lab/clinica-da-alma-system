@@ -9,6 +9,9 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import AudioUpload from "./pages/AudioUpload";
 import Analytics from "./pages/Analytics";
+import Calendar from "./pages/Calendar";
+import Notifications from "./pages/Notifications";
+import Reports from "./pages/Reports";
 
 function Router() {
   const { isAuthenticated, loading } = useAuth();
@@ -28,6 +31,9 @@ function Router() {
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/audio"} component={AudioUpload} />
       <Route path={"/analytics"} component={Analytics} />
+      <Route path={"/calendar"} component={Calendar} />
+      <Route path={"/notifications"} component={Notifications} />
+      <Route path={"/reports"} component={Reports} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
