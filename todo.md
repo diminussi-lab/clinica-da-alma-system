@@ -70,3 +70,21 @@
 - [x] Testes de funcionalidades principais
 - [x] Validação de fluxos
 - [x] Entrega final
+
+## Fase 13: Formulários Funcionais
+- [x] Criar página de cadastro de clientes com React Hook Form
+- [x] Criar página de edição de prontuário com validação
+- [x] Criar página de agendamento de sessões
+- [x] Adicionar feedback visual e redirecionamentos após sucesso
+
+## Fase 14: Upload de Áudios e Meditações
+- [x] Implementar upload de áudios com storagePut
+- [x] Criar player de reprodução de áudio
+- [x] Criar biblioteca de meditações pesquisável
+- [x] Adicionar controles de volume e tempo
+
+## Fase 15: Gráficos e Visualizações
+- [x] Implementar gráfico de evolução emocional (linha)
+- [x] Implementar gráfico de faturamento mensal (coluna)
+- [x] Integrar calendário visual para agendamentos
+- [x] Adicionar filtros e análises de progresso
