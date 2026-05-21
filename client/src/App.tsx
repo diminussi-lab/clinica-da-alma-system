@@ -15,6 +15,8 @@ import Reports from "./pages/Reports";
 import FullCalendarPage from "./pages/FullCalendarPage";
 import NotificationsAdvanced from "./pages/NotificationsAdvanced";
 import PDFReports from "./pages/PDFReports";
+import PasswordReset from "./pages/PasswordReset";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function Router() {
   const { isAuthenticated, loading } = useAuth();
@@ -40,6 +42,8 @@ function Router() {
       <Route path={"/fullcalendar"} component={FullCalendarPage} />
       <Route path={"/notifications-advanced"} component={NotificationsAdvanced} />
       <Route path={"/pdf-reports"} component={PDFReports} />
+      <Route path={"/password-reset"} component={PasswordReset} />
+      <Route path={"/privacy"} component={PrivacyPolicy} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
