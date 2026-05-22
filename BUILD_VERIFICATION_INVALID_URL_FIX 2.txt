@@ -1,0 +1,1 @@
+{'file': 'index-Dt1fd69q.js', 'contains_undefined_app_auth': False, 'contains_new_url_undefined_app_auth': False, 'contains_old_bundle_name': False, 'contains_app_auth': True, 'contains_invalid_oauth_warning': True, 'contains_literal_undefined_guard': True}
