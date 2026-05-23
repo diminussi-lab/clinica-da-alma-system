@@ -45,7 +45,6 @@ export function useAuth(options?: UseAuthOptions) {
       "manus-runtime-user-info",
       JSON.stringify(meQuery.data)
     );
-
     return {
       user: meQuery.data ?? null,
       loading: meQuery.isLoading || logoutMutation.isPending,
@@ -66,12 +65,10 @@ export function useAuth(options?: UseAuthOptions) {
     if (state.user) return;
     if (typeof window === "undefined") return;
 
-    const targetRedirectPath = redirectPath ?? getLoginUrl();
+    const loginUrl = redirectPath ?? getLoginUrl();
+    if (window.location.href === loginUrl || window.location.pathname === loginUrl) return;
 
-    if (window.location.href === targetRedirectPath) return;
-    if (window.location.pathname === targetRedirectPath) return;
-
-    window.location.href = targetRedirectPath;
+    window.location.href = loginUrl;
   }, [
     redirectOnUnauthenticated,
     redirectPath,
