@@ -1,45 +1,44 @@
 export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 
-function getSafeAbsoluteUrl(rawValue: unknown ): URL | null {
-  if (typeof rawValue !== "string") return null;
+const DEFAULT_OAUTH_PORTAL_URL = "https://manus.im";
+const DEFAULT_APP_ID = "Wz8MVzUKSE5Js4yiZfrhPT";
 
-  const value = rawValue.trim();
-
-  if (!value || value === "undefined" || value === "null") {
-    return null;
+const getCurrentOrigin = ( ) => {
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return window.location.origin;
   }
 
-  try {
-    return new URL(value);
-  } catch {
-    return null;
-  }
-}
+  return "";
+};
 
-function getLocalFallbackLoginUrl(): string {
-  if (typeof window === "undefined") return "/";
-  return "/";
-}
+const normalizeBaseUrl = (value: string | undefined) => {
+  const trimmedValue = value?.trim();
+
+  if (!trimmedValue || trimmedValue === "undefined" || trimmedValue === "null") {
+    return DEFAULT_OAUTH_PORTAL_URL;
+  }
+
+  return trimmedValue.replace(/\/+$/, "");
+};
+
+const normalizeAppId = (value: string | undefined) => {
+  const trimmedValue = value?.trim();
+
+  if (!trimmedValue || trimmedValue === "undefined" || trimmedValue === "null") {
+    return DEFAULT_APP_ID;
+  }
+
+  return trimmedValue;
+};
 
 // Generate login URL at runtime so redirect URI reflects the current origin.
 export const getLoginUrl = () => {
-  if (typeof window === "undefined") return "/";
+  const oauthPortalUrl = normalizeBaseUrl(import.meta.env.VITE_OAUTH_PORTAL_URL);
+  const appId = normalizeAppId(import.meta.env.VITE_APP_ID);
+  const redirectUri = `${getCurrentOrigin()}/api/oauth/callback`;
+  const state = btoa(redirectUri);
 
-  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
-  const appId = import.meta.env.VITE_APP_ID;
-  const redirectUri = new URL("/api/oauth/callback", window.location.origin).toString();
-  const state = window.btoa(redirectUri);
-
-  const oauthBaseUrl = getSafeAbsoluteUrl(oauthPortalUrl);
-
-  if (!oauthBaseUrl || !appId) {
-    console.warn(
-      "OAuth não configurado. Defina VITE_OAUTH_PORTAL_URL e VITE_APP_ID na Vercel se o login externo for necessário."
-    );
-    return getLocalFallbackLoginUrl();
-  }
-
-  const url = new URL("/app-auth", oauthBaseUrl.origin);
+  const url = new URL("/app-auth", oauthPortalUrl);
   url.searchParams.set("appId", appId);
   url.searchParams.set("redirectUri", redirectUri);
   url.searchParams.set("state", state);
