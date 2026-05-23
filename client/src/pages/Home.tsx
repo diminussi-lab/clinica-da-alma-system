@@ -1,21 +1,39 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Heart, Calendar, Music, TrendingUp, FileText, Users } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import { useLocation } from "wouter";
+import { useEffect } from "react";
 
 /**
  * Página inicial pública do sistema Clínica da Alma.
- *
- * Importante: esta página não deve chamar useAuth() nem /api/trpc/auth.me.
- * Se a API de autenticação falhar na Vercel, a landing page ainda precisa abrir.
  */
 export default function Home() {
-  const goToLogin = () => {
+  const { user, isAuthenticated } = useAuth();
+  const [, navigate] = useLocation();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, user, navigate]);
+
+  const handleLogin = () => {
     window.location.href = getLoginUrl();
   };
 
+  const handleLearnMore = () => {
+    document.getElementById("recursos")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-spiritual">
+      {/* Header */}
       <header className="border-b border-spiritual">
         <div className="container py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -25,7 +43,8 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-slate-900">Clínica da Alma</h1>
           </div>
           <Button
-            onClick={goToLogin}
+            type="button"
+            onClick={handleLogin}
             className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
           >
             Entrar
@@ -33,6 +52,7 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Hero Section */}
       <section className="container py-20">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6 animate-slide-in-left">
@@ -44,13 +64,16 @@ export default function Home() {
             </p>
             <div className="flex gap-4">
               <Button
-                onClick={goToLogin}
+                type="button"
+                onClick={handleLogin}
                 size="lg"
                 className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
               >
                 Começar Agora
               </Button>
               <Button
+                type="button"
+                onClick={handleLearnMore}
                 size="lg"
                 variant="outline"
                 className="border-[hsl(var(--spiritual-lilac))] text-slate-900 hover:bg-[hsl(var(--spiritual-lilac)_/_0.1)]"
@@ -85,7 +108,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container py-20">
+      {/* Features Section */}
+      <section id="recursos" className="container py-20">
         <h3 className="text-4xl font-bold text-center mb-16 text-slate-900">
           Recursos Principais
         </h3>
@@ -137,6 +161,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CTA Section */}
       <section className="container py-20">
         <div className="bg-gradient-to-r from-[hsl(var(--spiritual-gold)_/_0.1)] to-[hsl(var(--spiritual-lilac)_/_0.1)] rounded-2xl p-12 border border-spiritual text-center">
           <h3 className="text-3xl font-bold mb-4 text-slate-900">
@@ -146,7 +171,8 @@ export default function Home() {
             Comece a usar Clínica da Alma hoje mesmo e ofereça um acompanhamento terapêutico mais profundo e organizado aos seus clientes.
           </p>
           <Button
-            onClick={goToLogin}
+            type="button"
+            onClick={handleLogin}
             size="lg"
             className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
           >
@@ -155,6 +181,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="border-t border-spiritual mt-20">
         <div className="container py-8 text-center text-slate-600">
           <p>© 2026 Clínica da Alma. Todos os direitos reservados.</p>
