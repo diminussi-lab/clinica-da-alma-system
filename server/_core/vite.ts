@@ -6,7 +6,7 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
 
-export async function setupVite(app: Express, server: Server) {
+export async function setupVite(app: Express, server: Server ) {
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
@@ -48,13 +48,18 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath =
-    process.env.NODE_ENV === "development"
-      ? path.resolve(import.meta.dirname, "../..", "dist", "public")
-      : path.resolve(import.meta.dirname, "public");
-  if (!fs.existsSync(distPath)) {
-    console.error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`
+  const candidateDistPaths = [
+    path.resolve(process.cwd(), "dist", "public"),
+    path.resolve(import.meta.dirname, "public"),
+    path.resolve(import.meta.dirname, "..", "public"),
+    path.resolve(import.meta.dirname, "..", "..", "dist", "public"),
+  ];
+
+  const distPath = candidateDistPaths.find((candidatePath) => fs.existsSync(candidatePath));
+
+  if (!distPath) {
+    throw new Error(
+      `Could not find the client build directory. Checked: ${candidateDistPaths.join(", ")}. Make sure to run pnpm build before starting the server.`
     );
   }
 
