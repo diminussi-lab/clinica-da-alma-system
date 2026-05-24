@@ -15,4 +15,3 @@ const normalizeReturnTo = (returnTo?: string) => {
 export const getLoginUrl = (returnTo: string = DEFAULT_RETURN_TO) => {
   return normalizeReturnTo(returnTo);
 };
-
