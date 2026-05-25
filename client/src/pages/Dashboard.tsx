@@ -10,11 +10,35 @@ import { useEffect, useMemo, useState } from "react";
 import ClientForm from "./ClientForm";
 import { getLocalClients, LocalClient } from "@/lib/localClients";
 
+function toDateInputValue(value: unknown) {
+  if (!value) return "";
+  if (typeof value === "string") return value.slice(0, 10);
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return "";
+}
+
+function toClientFormInitialData(client: any) {
+  return {
+    name: client.name || "",
+    email: client.email || "",
+    phone: client.phone || "",
+    dateOfBirth: toDateInputValue(client.dateOfBirth),
+    address: client.address || "",
+    city: client.city || "",
+    state: client.state || "",
+    zipCode: client.zipCode || "",
+    emergencyContact: client.emergencyContact || "",
+    emergencyPhone: client.emergencyPhone || "",
+    notes: client.notes || "",
+  };
+}
+
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
   const [showClientForm, setShowClientForm] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<any | null>(null);
   const [localClients, setLocalClients] = useState<LocalClient[]>([]);
 
   // Fetch data
@@ -55,7 +79,16 @@ export default function Dashboard() {
   }
 
   if (showClientForm) {
-    return <ClientForm onSuccess={() => setShowClientForm(false)} />;
+    return (
+      <ClientForm
+        clientId={selectedClient?.id}
+        initialData={selectedClient ? toClientFormInitialData(selectedClient) : undefined}
+        onSuccess={() => {
+          setShowClientForm(false);
+          setSelectedClient(null);
+        }}
+      />
+    );
   }
 
   // Calculate financial summary
@@ -195,7 +228,10 @@ export default function Dashboard() {
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-slate-900">Meus Clientes</h3>
               <Button
-                onClick={() => setShowClientForm(true)}
+                onClick={() => {
+                  setSelectedClient(null);
+                  setShowClientForm(true);
+                }}
                 className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -208,7 +244,10 @@ export default function Dashboard() {
                   <Card
                     key={client.id}
                     className="card-spiritual cursor-pointer hover:shadow-spiritual transition-smooth"
-                    onClick={() => navigate(`/clients/${client.id}`)}
+                    onClick={() => {
+                      setSelectedClient(client);
+                      setShowClientForm(true);
+                    }}
                   >
                     <h4 className="text-lg font-semibold text-slate-900 mb-2">{client.name}</h4>
                     <p className="text-sm text-slate-600 mb-3">{client.email || "Sem email"}</p>
