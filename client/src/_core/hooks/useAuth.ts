@@ -3,6 +3,29 @@ import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
 import { useCallback, useEffect, useMemo } from "react";
 
+const LOCAL_AUTH_STORAGE_KEY = "clinica-da-alma-local-auth";
+
+const FALLBACK_LOCAL_USER = {
+  id: 1,
+  openId: "clinica-da-alma-local-owner",
+  name: "Clínica da Alma",
+  email: null,
+  loginMethod: "local",
+  role: "admin",
+  createdAt: new Date(0),
+  updatedAt: new Date(0),
+  lastSignedIn: new Date(0),
+};
+
+function hasLocalAuthIntent() {
+  if (typeof window === "undefined") return false;
+
+  return (
+    localStorage.getItem(LOCAL_AUTH_STORAGE_KEY) === "true" ||
+    window.location.pathname !== "/"
+  );
+}
+
 type UseAuthOptions = {
   redirectOnUnauthenticated?: boolean;
   redirectPath?: string;
@@ -12,9 +35,13 @@ export function useAuth(options?: UseAuthOptions) {
   const { redirectOnUnauthenticated = false, redirectPath } = options ?? {};
   const utils = trpc.useUtils();
 
+  const shouldAuthenticate = hasLocalAuthIntent();
+
   const meQuery = trpc.auth.me.useQuery(undefined, {
+    enabled: shouldAuthenticate,
     retry: false,
     refetchOnWindowFocus: false,
+    staleTime: 60_000,
   });
 
   const logoutMutation = trpc.auth.logout.useMutation({
@@ -35,33 +62,37 @@ export function useAuth(options?: UseAuthOptions) {
       }
       throw error;
     } finally {
+      localStorage.removeItem(LOCAL_AUTH_STORAGE_KEY);
       utils.auth.me.setData(undefined, null);
       await utils.auth.me.invalidate();
     }
   }, [logoutMutation, utils]);
 
   const state = useMemo(() => {
+    const user = meQuery.data ?? (shouldAuthenticate ? FALLBACK_LOCAL_USER : null);
+
     localStorage.setItem(
       "manus-runtime-user-info",
-      JSON.stringify(meQuery.data)
+      JSON.stringify(user)
     );
+
     return {
-      user: meQuery.data ?? null,
-      loading: meQuery.isLoading || logoutMutation.isPending,
+      user,
+      loading: logoutMutation.isPending,
       error: meQuery.error ?? logoutMutation.error ?? null,
-      isAuthenticated: Boolean(meQuery.data),
+      isAuthenticated: Boolean(user),
     };
   }, [
+    shouldAuthenticate,
     meQuery.data,
     meQuery.error,
-    meQuery.isLoading,
     logoutMutation.error,
     logoutMutation.isPending,
   ]);
 
   useEffect(() => {
     if (!redirectOnUnauthenticated) return;
-    if (meQuery.isLoading || logoutMutation.isPending) return;
+    if (logoutMutation.isPending) return;
     if (state.user) return;
     if (typeof window === "undefined") return;
 
@@ -73,7 +104,6 @@ export function useAuth(options?: UseAuthOptions) {
     redirectOnUnauthenticated,
     redirectPath,
     logoutMutation.isPending,
-    meQuery.isLoading,
     state.user,
   ]);
 
