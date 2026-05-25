@@ -11,6 +11,7 @@ import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft } from "lucide-react";
+import { createLocalClient, updateLocalClient } from "@/lib/localClients";
 
 const clientFormSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -39,6 +40,7 @@ export default function ClientForm({ clientId, initialData, onSuccess, id }: Cli
   const finalClientId = clientId || (id ? parseInt(id) : undefined);
   const { user } = useAuth();
   const [, navigate] = useLocation();
+  const utils = trpc.useUtils();
   const createClientMutation = trpc.clients.create.useMutation();
   const updateClientMutation = trpc.clients.update.useMutation();
 
@@ -61,29 +63,60 @@ export default function ClientForm({ clientId, initialData, onSuccess, id }: Cli
 
   const isLoading = createClientMutation.isPending || updateClientMutation.isPending;
 
+  function normalizeFormData(data: ClientFormData) {
+    return Object.fromEntries(
+      Object.entries(data)
+        .map(([key, value]) => [key, typeof value === "string" ? value.trim() : value])
+        .filter(([, value]) => value !== "" && value !== undefined)
+    ) as ClientFormData;
+  }
+
+  function finishAfterSave() {
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      navigate("/dashboard");
+    }
+  }
+
   async function onSubmit(data: ClientFormData) {
+    const normalizedData = normalizeFormData(data);
+
     try {
       if (finalClientId) {
         if (!user) throw new Error("User not authenticated");
         await updateClientMutation.mutateAsync({
           clientId: finalClientId,
-          ...data,
+          ...normalizedData,
         });
+        await utils.clients.list.invalidate();
         toast.success("Cliente atualizado com sucesso!");
       } else {
         if (!user) throw new Error("User not authenticated");
-        await createClientMutation.mutateAsync(data);
+        await createClientMutation.mutateAsync(normalizedData);
+        await utils.clients.list.invalidate();
         toast.success("Cliente cadastrado com sucesso!");
       }
 
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        navigate("/dashboard");
-      }
+      finishAfterSave();
     } catch (error) {
-      toast.error("Erro ao salvar cliente. Tente novamente.");
-      console.error(error);
+      console.error("[ClientForm] Falha ao salvar pela API. Usando armazenamento local quando possível:", error);
+
+      if (finalClientId && finalClientId < 0) {
+        updateLocalClient(finalClientId, normalizedData);
+        toast.success("Cliente atualizado neste dispositivo.");
+        finishAfterSave();
+        return;
+      }
+
+      if (!finalClientId) {
+        createLocalClient(normalizedData, user?.id ?? 1);
+        toast.warning("Banco de dados indisponível. Cliente salvo neste dispositivo para não perder o cadastro.");
+        finishAfterSave();
+        return;
+      }
+
+      toast.error("Não foi possível salvar no banco de dados. Verifique as variáveis de ambiente da Vercel.");
     }
   }
 
