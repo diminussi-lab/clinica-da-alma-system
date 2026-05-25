@@ -7,11 +7,13 @@ import { Users, Calendar, FileText, Music, TrendingUp, DollarSign, Plus, Loader2
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
 import { useState } from "react";
+import ClientForm from "./ClientForm";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
+  const [showClientForm, setShowClientForm] = useState(false);
 
   // Fetch data
   const clientsQuery = trpc.clients.list.useQuery(undefined, { enabled: !!user });
@@ -24,6 +26,10 @@ export default function Dashboard() {
         <Loader2 className="w-12 h-12 animate-spin spiritual-accent" />
       </div>
     );
+  }
+
+  if (showClientForm) {
+    return <ClientForm onSuccess={() => setShowClientForm(false)} />;
   }
 
   const clients = clientsQuery.data || [];
@@ -167,7 +173,7 @@ export default function Dashboard() {
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold text-slate-900">Meus Clientes</h3>
               <Button
-                onClick={() => navigate("/clients/new")}
+                onClick={() => setShowClientForm(true)}
                 className="bg-gradient-to-r from-[hsl(var(--spiritual-gold))] to-[hsl(var(--spiritual-lilac))] text-slate-900 hover:shadow-spiritual"
               >
                 <Plus className="w-4 h-4 mr-2" />
