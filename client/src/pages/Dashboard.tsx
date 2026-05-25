@@ -6,19 +6,45 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Calendar, FileText, Music, TrendingUp, DollarSign, Plus, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ClientForm from "./ClientForm";
+import { getLocalClients, LocalClient } from "@/lib/localClients";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
   const [showClientForm, setShowClientForm] = useState(false);
+  const [localClients, setLocalClients] = useState<LocalClient[]>([]);
 
   // Fetch data
   const clientsQuery = trpc.clients.list.useQuery(undefined, { enabled: !!user });
   const appointmentsQuery = trpc.appointments.listByTherapist.useQuery(undefined, { enabled: !!user });
   const financialQuery = trpc.financialRecords.listByTherapist.useQuery(undefined, { enabled: !!user });
+
+  useEffect(() => {
+    if (!user) return;
+
+    const refreshLocalClients = () => {
+      setLocalClients(getLocalClients(user.id));
+    };
+
+    refreshLocalClients();
+    window.addEventListener("storage", refreshLocalClients);
+    window.addEventListener("clinica-da-alma-local-clients-updated", refreshLocalClients);
+
+    return () => {
+      window.removeEventListener("storage", refreshLocalClients);
+      window.removeEventListener("clinica-da-alma-local-clients-updated", refreshLocalClients);
+    };
+  }, [user]);
+
+  const clients = useMemo(() => {
+    const serverClients = clientsQuery.data || [];
+    return [...localClients, ...serverClients];
+  }, [clientsQuery.data, localClients]);
+  const appointments = appointmentsQuery.data || [];
+  const financialRecords = financialQuery.data || [];
 
   if (authLoading || !user) {
     return (
@@ -31,10 +57,6 @@ export default function Dashboard() {
   if (showClientForm) {
     return <ClientForm onSuccess={() => setShowClientForm(false)} />;
   }
-
-  const clients = clientsQuery.data || [];
-  const appointments = appointmentsQuery.data || [];
-  const financialRecords = financialQuery.data || [];
 
   // Calculate financial summary
   const totalIncome = financialRecords
@@ -192,7 +214,7 @@ export default function Dashboard() {
                     <p className="text-sm text-slate-600 mb-3">{client.email || "Sem email"}</p>
                     <div className="flex justify-between items-center">
                       <span className={`text-xs px-2 py-1 rounded-full ${client.isActive ? "bg-[hsl(var(--spiritual-gold)_/_0.1)] text-slate-900" : "bg-slate-100 text-slate-600"}`}>
-                        {client.isActive ? "Ativo" : "Inativo"}
+                        {"localOnly" in client && client.localOnly ? "Local" : client.isActive ? "Ativo" : "Inativo"}
                       </span>
                       <Button variant="ghost" size="sm">
                         Ver Detalhes
