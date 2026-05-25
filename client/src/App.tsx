@@ -7,6 +7,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { useAuth } from "./_core/hooks/useAuth";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import ClientForm from "./pages/ClientForm";
+import SessionForm from "./pages/SessionForm";
 import AudioUpload from "./pages/AudioUpload";
 import Analytics from "./pages/Analytics";
 import Calendar from "./pages/Calendar";
@@ -34,6 +36,8 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/dashboard"} component={Dashboard} />
+      <Route path={"/clients/new"}>{() => <ClientForm />}</Route>
+      <Route path={"/appointments/new"}>{() => <SessionForm />}</Route>
       <Route path={"/audio"} component={AudioUpload} />
       <Route path={"/analytics"} component={Analytics} />
       <Route path={"/calendar"} component={Calendar} />
