@@ -6,6 +6,30 @@ import { z } from "zod";
 import * as db from "./db";
 import { TRPCError } from "@trpc/server";
 
+const optionalTrimmedString = z
+  .union([z.string().trim().min(1), z.literal("")])
+  .optional()
+  .transform((value) => (value && value.length > 0 ? value : undefined));
+
+const optionalEmail = z
+  .union([z.string().trim().email(), z.literal("")])
+  .optional()
+  .transform((value) => (value && value.length > 0 ? value : undefined));
+
+const clientInputSchema = z.object({
+  name: z.string().trim().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  email: optionalEmail,
+  phone: optionalTrimmedString,
+  dateOfBirth: optionalTrimmedString,
+  address: optionalTrimmedString,
+  city: optionalTrimmedString,
+  state: optionalTrimmedString,
+  zipCode: optionalTrimmedString,
+  emergencyContact: optionalTrimmedString,
+  emergencyPhone: optionalTrimmedString,
+  notes: optionalTrimmedString,
+});
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -32,38 +56,13 @@ export const appRouter = router({
       }),
 
     create: protectedProcedure
-      .input(z.object({
-        name: z.string(),
-        email: z.string().email().optional(),
-        phone: z.string().optional(),
-        dateOfBirth: z.string().optional(),
-        address: z.string().optional(),
-        city: z.string().optional(),
-        state: z.string().optional(),
-        zipCode: z.string().optional(),
-        emergencyContact: z.string().optional(),
-        emergencyPhone: z.string().optional(),
-        notes: z.string().optional(),
-      }))
+      .input(clientInputSchema)
       .mutation(async ({ ctx, input }) => {
         return await db.createClient(ctx.user.id, input);
       }),
 
     update: protectedProcedure
-      .input(z.object({
-        clientId: z.number(),
-        name: z.string().optional(),
-        email: z.string().email().optional(),
-        phone: z.string().optional(),
-        dateOfBirth: z.string().optional(),
-        address: z.string().optional(),
-        city: z.string().optional(),
-        state: z.string().optional(),
-        zipCode: z.string().optional(),
-        emergencyContact: z.string().optional(),
-        emergencyPhone: z.string().optional(),
-        notes: z.string().optional(),
-      }))
+      .input(clientInputSchema.partial().extend({ clientId: z.number() }))
       .mutation(async ({ input }) => {
         const { clientId, ...data } = input;
         return await db.updateClient(clientId, data);
