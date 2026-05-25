@@ -5,6 +5,30 @@ import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
+function removeUndefinedValues<T extends Record<string, unknown>>(data: T) {
+  return Object.fromEntries(
+    Object.entries(data).filter(([, value]) => value !== undefined)
+  ) as Partial<T>;
+}
+
+function normalizeOptionalString(value: unknown) {
+  if (typeof value !== "string") return value;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function normalizeClientData(data: Record<string, unknown>) {
+  const normalized = Object.fromEntries(
+    Object.entries(data).map(([key, value]) => [key, normalizeOptionalString(value)])
+  ) as Record<string, unknown>;
+
+  if (typeof normalized.state === "string") {
+    normalized.state = normalized.state.toUpperCase().slice(0, 2);
+  }
+
+  return removeUndefinedValues(normalized);
+}
+
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
@@ -94,9 +118,10 @@ export async function createClient(therapistId: number, data: any) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
+  const clientData = normalizeClientData(data) as any;
   const result = await db.insert(clients).values({
     therapistId,
-    ...data,
+    ...clientData,
   });
   return result;
 }
@@ -120,7 +145,7 @@ export async function updateClient(clientId: number, data: any) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  return await db.update(clients).set(data).where(eq(clients.id, clientId));
+  return await db.update(clients).set(normalizeClientData(data) as any).where(eq(clients.id, clientId));
 }
 
 export async function deleteClient(clientId: number) {
