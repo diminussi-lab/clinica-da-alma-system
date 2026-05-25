@@ -19,9 +19,10 @@ export default function Home() {
     }
   }, [isAuthenticated, user, navigate]);
 
-  const handleLogin = () => {
-    window.location.href = getLoginUrl();
-  };
+const handleLogin = () => {
+  localStorage.setItem("clinica-da-alma-local-auth", "true");
+  window.location.href = getLoginUrl();
+};
 
   const handleLearnMore = () => {
     document.getElementById("recursos")?.scrollIntoView({ behavior: "smooth" });
