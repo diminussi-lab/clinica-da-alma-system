@@ -2,14 +2,10 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
-import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerLocalAuthRoutes } from "./localAuth";
-import { registerStorageProxy } from "./storageProxy";
-import { appRouter } from "../routers";
-import { createContext } from "./context";
+import { createApiApp, registerApiRoutes } from "./apiApp";
 import { serveStatic, setupVite } from "./vite";
 
-function isPortAvailable(port: number ): Promise<boolean> {
+function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
     const server = net.createServer();
     server.listen(port, () => {
@@ -26,30 +22,6 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
     }
   }
   throw new Error(`No available port found starting from ${startPort}`);
-}
-
-function registerApiRoutes(app: express.Express) {
-  app.use(express.json({ limit: "50mb" }));
-  app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
-  registerStorageProxy(app);
-  registerLocalAuthRoutes(app);
-
-  app.use(
-    "/api/trpc",
-    createExpressMiddleware({
-      router: appRouter,
-      createContext,
-    })
-  );
-}
-
-export function createApiApp() {
-  const app = express();
-
-  registerApiRoutes(app);
-
-  return app;
 }
 
 export function createApp() {
@@ -81,7 +53,7 @@ async function startServer() {
   }
 
   server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/` );
+    console.log(`Server running on http://localhost:${port}/`);
   });
 }
 
