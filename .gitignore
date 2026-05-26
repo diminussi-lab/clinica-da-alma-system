@@ -109,9 +109,9 @@ temp/
 # Webdev artifacts (checkpoint zips, migrations, etc.)
 .webdev/
 
-# Manus version file (auto-generated, not part of source)
-client/public/__manus__/version.json
+
+# Entrega final: não versionar pacotes, patches ou saídas de deploy
+*.zip
+*.patch
 .vercel/
 .vercel/output/
-dist/
-assets/
