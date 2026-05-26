@@ -1,30 +1,8 @@
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { TRPCClientError } from "@trpc/client";
 import { useCallback, useEffect, useMemo } from "react";
 
 const LOCAL_AUTH_STORAGE_KEY = "clinica-da-alma-local-auth";
-
-const FALLBACK_LOCAL_USER = {
-  id: 1,
-  openId: "clinica-da-alma-local-owner",
-  name: "Clínica da Alma",
-  email: null,
-  loginMethod: "local",
-  role: "admin",
-  createdAt: new Date(0),
-  updatedAt: new Date(0),
-  lastSignedIn: new Date(0),
-};
-
-function hasLocalAuthIntent() {
-  if (typeof window === "undefined") return false;
-
-  return (
-    localStorage.getItem(LOCAL_AUTH_STORAGE_KEY) === "true" ||
-    window.location.pathname !== "/"
-  );
-}
 
 type UseAuthOptions = {
   redirectOnUnauthenticated?: boolean;
@@ -35,81 +13,84 @@ export function useAuth(options?: UseAuthOptions) {
   const { redirectOnUnauthenticated = false, redirectPath } = options ?? {};
   const utils = trpc.useUtils();
 
-  const shouldAuthenticate = hasLocalAuthIntent();
-
   const meQuery = trpc.auth.me.useQuery(undefined, {
-    enabled: shouldAuthenticate,
     retry: false,
     refetchOnWindowFocus: false,
     staleTime: 60_000,
   });
 
+  const loginMutation = trpc.auth.login.useMutation({
+    onSuccess: async (user) => {
+      localStorage.setItem(LOCAL_AUTH_STORAGE_KEY, "true");
+      localStorage.setItem("clinica-da-alma-user-info", JSON.stringify(user));
+      utils.auth.me.setData(undefined, user);
+      await utils.auth.me.invalidate();
+    },
+  });
+
   const logoutMutation = trpc.auth.logout.useMutation({
     onSuccess: () => {
+      localStorage.removeItem(LOCAL_AUTH_STORAGE_KEY);
+      localStorage.removeItem("clinica-da-alma-user-info");
       utils.auth.me.setData(undefined, null);
     },
   });
 
+  const login = useCallback(
+    async (password: string) => loginMutation.mutateAsync({ password }),
+    [loginMutation]
+  );
+
   const logout = useCallback(async () => {
     try {
       await logoutMutation.mutateAsync();
-    } catch (error: unknown) {
-      if (
-        error instanceof TRPCClientError &&
-        error.data?.code === "UNAUTHORIZED"
-      ) {
-        return;
-      }
-      throw error;
     } finally {
       localStorage.removeItem(LOCAL_AUTH_STORAGE_KEY);
+      localStorage.removeItem("clinica-da-alma-user-info");
       utils.auth.me.setData(undefined, null);
       await utils.auth.me.invalidate();
     }
   }, [logoutMutation, utils]);
 
   const state = useMemo(() => {
-    const user = meQuery.data ?? (shouldAuthenticate ? FALLBACK_LOCAL_USER : null);
+    const user = meQuery.data ?? null;
 
-    localStorage.setItem(
-      "manus-runtime-user-info",
-      JSON.stringify(user)
-    );
+    if (user) {
+      localStorage.setItem("clinica-da-alma-user-info", JSON.stringify(user));
+    }
 
     return {
       user,
-      loading: logoutMutation.isPending,
-      error: meQuery.error ?? logoutMutation.error ?? null,
+      loading: meQuery.isLoading || loginMutation.isPending || logoutMutation.isPending,
+      error: meQuery.error ?? loginMutation.error ?? logoutMutation.error ?? null,
       isAuthenticated: Boolean(user),
     };
   }, [
-    shouldAuthenticate,
     meQuery.data,
     meQuery.error,
+    meQuery.isLoading,
+    loginMutation.error,
+    loginMutation.isPending,
     logoutMutation.error,
     logoutMutation.isPending,
   ]);
 
   useEffect(() => {
     if (!redirectOnUnauthenticated) return;
-    if (logoutMutation.isPending) return;
+    if (state.loading) return;
     if (state.user) return;
     if (typeof window === "undefined") return;
 
     const loginUrl = redirectPath ?? getLoginUrl();
-    if (window.location.href === loginUrl || window.location.pathname === loginUrl) return;
+    if (window.location.pathname === loginUrl) return;
 
     window.location.href = loginUrl;
-  }, [
-    redirectOnUnauthenticated,
-    redirectPath,
-    logoutMutation.isPending,
-    state.user,
-  ]);
+  }, [redirectOnUnauthenticated, redirectPath, state.loading, state.user]);
 
   return {
     ...state,
     refresh: () => meQuery.refetch(),
+    login,
     logout,
   };
 }
