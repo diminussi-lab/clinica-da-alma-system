@@ -1,62 +1,17 @@
-import "dotenv/config";
-import express from "express";
-import { createServer } from "http";
-import net from "net";
-import { createApiApp, registerApiRoutes } from "./apiApp";
-import { serveStatic, setupVite } from "./vite";
+import type { Express, Request, Response } from "express";
 
-function isPortAvailable(port: number): Promise<boolean> {
-  return new Promise(resolve => {
-    const server = net.createServer();
-    server.listen(port, () => {
-      server.close(() => resolve(true));
-    });
-    server.on("error", () => resolve(false));
+function getSafeReturnTo(req: Request): string {
+  const value = req.query.returnTo;
+
+  if (typeof value !== "string") return "/dashboard";
+  if (!value.startsWith("/")) return "/dashboard";
+  if (value.startsWith("//")) return "/dashboard";
+
+  return value;
+}
+
+export function registerLocalAuthRoutes(app: Express) {
+  app.get("/api/local-login", (req: Request, res: Response) => {
+    res.redirect(302, getSafeReturnTo(req));
   });
-}
-
-async function findAvailablePort(startPort: number = 3000): Promise<number> {
-  for (let port = startPort; port < startPort + 20; port++) {
-    if (await isPortAvailable(port)) {
-      return port;
-    }
-  }
-  throw new Error(`No available port found starting from ${startPort}`);
-}
-
-export function createApp() {
-  const app = express();
-
-  registerApiRoutes(app);
-  serveStatic(app);
-
-  return app;
-}
-
-async function startServer() {
-  const app = express();
-  const server = createServer(app);
-
-  registerApiRoutes(app);
-
-  if (process.env.NODE_ENV === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
-
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
-
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
-  }
-
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
-  });
-}
-
-if (!process.env.VERCEL) {
-  startServer().catch(console.error);
 }
